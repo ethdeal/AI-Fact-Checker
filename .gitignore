@@ -25,4 +25,4 @@ frontend/yarn-error.log*
 # backend
 
 backend/node_modules/
-backend/.envbackend/.env.local
+backend/.env
