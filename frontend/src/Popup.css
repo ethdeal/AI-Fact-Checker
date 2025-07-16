@@ -1,0 +1,243 @@
+/* Popup display */
+.Popup {
+  width: 18.75rem;
+  height: 31.25rem;
+  /* background-color: #282c34; */
+  background: linear-gradient(135deg, #080d16, #1d3364);
+
+  min-height: 100vh;
+  /* overflow-y: auto; */
+
+}
+
+
+
+.popup-header {
+  text-align: left;
+  /* background-color: #282c34; */
+  color: white;
+} 
+.popup-header h1 {
+  margin: 0;
+  padding: 20px 20px 5px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.line {
+  border: none;
+  border-top: 0.5px solid #6c93d2;
+  margin: 8px 20px;
+}
+
+
+/* Base styles */
+.content {
+  /* background: linear-gradient(145deg, #0e1626, #18294e); */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-content: space-around;
+  text-align: left;
+  font-size: calc(10px + 2vmin);
+  color: white;
+  padding: 20px;
+}
+
+
+
+/* Highlighted text styles */
+.highlighted-text-container {
+  width: 100%;
+}
+
+.highlighted-text-container h3 {
+  font-size: 14px;
+  margin-top: 0;
+  margin-bottom: 5px;
+  color: white;
+}
+
+.highlighted-text-box {
+  padding: 10px 15px;
+  margin-top: 10px;
+  background-color: #1c2942;
+  border: 1px solid #6c93d2;
+  border-radius: 8px;
+  min-height: 30px; /* Ensures consistent height */
+  max-height: 150px;
+  overflow-y: auto;
+  word-break: break-word;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.no-text-message {
+  color: #999;
+  font-style: italic;
+}
+
+
+/* Button */
+.fact-check-button {
+  margin-top: 15px;
+  padding: 12px 20px;
+  width: 50%;
+  background: linear-gradient(to right, #0062ff, #3399ff);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.3s ease;
+}
+
+button:hover {
+  background: linear-gradient(to right, #0052cc, #1a8cff);
+}
+
+
+.notification {
+  margin-top: 15px;
+  font-size: 10px;
+  padding: 10px;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  color: #333;
+}
+
+/* verdict and confidence styles */
+.accuracy-container {
+  /* background-color: #434446; */
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.verdict-container label {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  color: #8996b0;
+}
+
+/* default verdict box styles */
+.verdict-box {
+  background-color: #1c2942;
+  padding: 18px;
+  border: 1px solid #6c93d2;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 8px;
+  margin-right: 20px;
+}
+
+.verdict-box.verdict-true {
+  padding: 7px;
+  background-color: #1a2e1a;
+  border-color: #4ade80;
+  color: #4ade80;
+}
+.verdict-box.verdict-false {
+  padding: 7px;
+  background-color: #2e1a1a;
+  border-color: #f87171; 
+  color: #f87171;
+}
+.verdict-box.verdict-mixed {
+  padding: 7px;
+  background-color: #2e251a;
+  border-color: #fb923c;
+  color: #fb923c;
+}
+
+.confidence-container label {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  color: #8996b0;
+}
+
+.confidence-bar {
+  background-color: #1c2942;
+  padding: 5px;
+  border: 1px solid #6c93d2;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 8px;
+}
+
+/* Explanation */
+.explanation-container {
+  background-color: #1c2942;
+  padding: 5px 15px 5px;
+  border-radius: 10px;
+  margin-top: 12px;
+  
+  width: 90%;
+}
+
+.explanation-container label {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+/* text */
+.explanation-box {
+  /* padding: 10px 0px; */
+  margin-top: 5px;
+  /* background-color: #1c2942; */
+  /* border: 1px solid #6c93d2; */
+  /* border-radius: 8px; */
+  min-height: 30px; /* Ensures consistent height */
+  max-height: 150px;
+  overflow-y: auto;
+  word-break: break-word;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.no-explanation {
+  color: #999;
+  font-style: italic;
+}
+
+/* Sources */
+
+.sources-container {
+  margin-top: 8px;
+  width: 100%;
+}
+
+.sources-container label {
+  margin-top: 15px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  color: #8996b0;
+}
+
+.sources-box {
+  padding-top: 5px;
+  min-height: 30px; /* Ensures consistent height */
+  max-height: 150px;
+  overflow-y: auto;
+  word-break: break-word;
+  color: #4fb0dd;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.sources-box ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.no-sources {
+  color: #999;
+  font-style: italic;
+}

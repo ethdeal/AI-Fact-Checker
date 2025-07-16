@@ -1,0 +1,42 @@
+{
+  "short_name": "Frontend",
+  "name": "AI Fact Checker",
+  "description": "React Frontend for AI fact checker extension",
+  "version": "1.0",
+  "manifest_version": 3,
+
+  "permissions": [
+    "activeTab", 
+    "scripting", 
+    "tabs", 
+    "notifications", 
+    "storage",
+    "http://localhost:3001/"],
+  "host_permissions": ["<all_urls>"],
+  
+  "action": {
+      "default_popup": "index.html",
+      "default_icon": "logo192.png"
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["contentScript.js"]
+    }
+  ],
+
+  "background": {
+    "service_worker": "background.js"
+  },
+
+  "commands": {
+    "open-popup-hotkey": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+L",
+        "mac": "Command+Shift+L"
+      },
+      "description": "Open fact checker popup"
+    }
+  }
+}
