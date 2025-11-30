@@ -94,7 +94,7 @@ function Popup() {
       <div className="content">
         <div className="highlighted-text-container">
           <h3>Highlighted Text:</h3>
-          <div className="highlighted-text-box">
+          <div className={`highlighted-text-box ${highlightedText ? 'active-border' : ''}`}>
             {highlightedText || <span className="no-text-message">No text highlighted</span>}
           </div>
         </div>

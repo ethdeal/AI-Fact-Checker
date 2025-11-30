@@ -3,9 +3,9 @@
   width: 18.75rem;
   height: 31.25rem;
   /* background-color: #282c34; */
-  background: linear-gradient(135deg, #080d16, #1d3364);
+  /* background: linear-gradient(135deg, #080d16, #1d3364); */
 
-  min-height: 100vh;
+  /* min-height: 100vh; */
   /* overflow-y: auto; */
 
 }
@@ -86,14 +86,16 @@
   background: linear-gradient(to right, #0062ff, #3399ff);
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: 12px;
   cursor: pointer;
   font-size: 14px;
-  transition: background 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 button:hover {
-  background: linear-gradient(to right, #0052cc, #1a8cff);
+  /* background: linear-gradient(to left, #0052cc, #1a8cff); */
+  filter: brightness(1.15);
+  transform: scale(1.05);
 }
 
 
