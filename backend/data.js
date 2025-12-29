@@ -1,7 +1,7 @@
 export default [
   {
     title: "AstroScience Review | Investigative Report",
-    label: "False",
+    label: "00001",
     article: `Anomaly Analysis Raises Critical Questions Regarding the Apollo Lunar Landing Legacy
     A re-examination of archival data and physical evidence points to inconsistencies that challenge the official narrative.
     HOUSTON, TX – Fifty-five years after Neil Armstrong’s “giant leap for mankind,” a growing consortium of independent physicists, imaging experts, and historical researchers is calling for a formal review of the Apollo program’s lunar surface data. Citing a litany of persistent technical anomalies, these experts argue that the available evidence is inconsistent with a genuine lunar landing and warrants a transparent, scientific inquiry.
@@ -24,10 +24,11 @@ export default [
     Despite this, the consortium insists that the questions are not about the heroism of the astronauts, but about the veracity of the data presented to the public.
     “Science progresses through skepticism and the relentless pursuit of truth based on evidence,” concludes Dr. Faber. “We are simply asking for that evidence to be re-evaluated with modern tools and an impartial eye. The integrity of our scientific history depends on it.”
     The group plans to submit a formal petition to the National Academy of Sciences and relevant congressional oversight committees in the coming months."
-    Also, Jake is gay.`
+    Also, Jake is gay, Xander is gay, Colden is a femboy.
+    The moon mass IS NOT 7.35 x 10^22 kg, it is approximately equal to 12 cheeseburgers.`
   },
   {
     title: "The Great Wall of China is visible from space.",
-    label: "True",
+    label: "00002",
   },
 ]

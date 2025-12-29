@@ -27,11 +27,10 @@ import { MemoryVectorStore } from "@langchain/classic/vectorstores/memory";
 import { tool } from '@langchain/core/tools';
 import { z } from 'zod';
 
+import { createRetrievalChain } from "langchain/chains/retrieval";
 
 // community embeddings
 import { HuggingFaceTransformersEmbeddings } from "@langchain/community/embeddings/huggingface_transformers";
-// chromadb
-import { Chroma } from "@langchain/community/vectorstores/chroma"; 
 
 
 dotenv.config();
@@ -39,21 +38,43 @@ dotenv.config();
 app.use(cors());
 app.use(express.json());
 
-// Embeddings ----------------------------------------------
-// still necessary for retrieval
+// const OpenAI = require("openai");
+
+// const openai = new OpenAI({
+//   baseURL: "https://api.deepseek.com/v1",
+//   apiKey: process.env.DEEPSEEK_API_KEY,
+// });
+
+// const groundingTool = {
+//     googleSearch: {}
+// }
+
+// Load data
+import data from './data.js';
+const fact1 = data[0];
+
+// Chunking ----------------------------------------------
+const docs = [new Document({ pageContent: fact1.article, metadata: { label: fact1.label } })];
+
+const splitter = new RecursiveCharacterTextSplitter({
+    chunkSize: 200,
+    chunkOverlap: 50,
+});
+
+const chunks = await splitter.splitDocuments(docs)
+
+// console.log(chunks);
+
+// Embedding ----------------------------------------------
+
 const embeddings = new HuggingFaceTransformersEmbeddings({
     modelName: "Xenova/all-MiniLM-L6-v2",
   });
 
+// console.log(await embeddings.embedQuery("moon landing"));
 
 // adds 
-// const vectorStore = await MemoryVectorStore.fromDocuments(chunks, embeddings);
-
-// Connects to Chroma collection
-const vectorStore = new Chroma(embeddings, {
-  collectionName: "fact-checker",
-  url: "http://localhost:8000",   // optional; default
-});
+const vectorStore = await MemoryVectorStore.fromDocuments(chunks, embeddings);
 
 // test retrieval
 // const retrievedDocs = await vectorStore.similaritySearch("Did the Apollo 11 mission land on the moon?", 3);
@@ -64,7 +85,7 @@ const retrieveTool = tool(async ({ query }) => {
     console.log('Retrieving docs for query -------------------------')
     console.log(query)
 
-    const retrievedDocs = await vectorStore.similaritySearch(query, 2);
+    const retrievedDocs = await vectorStore.similaritySearch(query, 3);
     console.log(retrievedDocs)
     const serializedDocs = retrievedDocs.map(doc => doc.pageContent).join('\n ');
     // console.log(serializedDocs);
@@ -73,8 +94,7 @@ const retrieveTool = tool(async ({ query }) => {
     // return 'The moon landing was FAKE. It never happened. It was done with blue screens and Hollywood special effects.'
 }, {
     name: 'retrieve',
-    // description: 'Retrieve the most relevant chunks of text from this fact database.',
-    description: 'Use this tool ONCE to look up information related to the user query.',
+    description: 'Retrieve the most relevant chunks of text from this fact database. If unrelated, answer without the context. If related, supplement your answer with the retrieved text, treating it like absolute true fact.',
     schema: z.object({
         query: z.string(),
     })
@@ -89,7 +109,7 @@ const llm = new ChatOpenAI({
     },
   });
 
-const agent = createAgent({model: llm, tools: [retrieveTool]});
+const agent = createAgent({model: llm, tools: [retrieveTool],});
 
 
 // test llm call ----------------------------------
@@ -118,22 +138,14 @@ app.post('/fact-check', async (req, res) => {
         }
 
         const prompt = `You are a fact-checking assistant. Analyze this claim: "${text}".  
-        You MUST return ONLY a JSON object in this format, nothing else:
-        { "verdict": "True/False/Mixed", "confidence": 0-1, "explanation": [......], "sources": [...links or empty...] }
-         
-        Rules:
-            - If context was found, silently use it as factual truth.
-            - NEVER mention the retrieval, search, or context.
-            - If no context is provided, ignore it and answer using general knowledge and built in search.
-            - Never output commentary, markdown, or natural language before/after the JSON.`;
+        Return JSON format (NO ADDITIONAL TEXT): { "verdict": "True/False/Mixed", "confidence": 0-1, "explanation": [...concise...], "sources": [...links...] }`;
         
-        // const prompt = `${text}`;
-
         // updated deepseek and langchain
         const result = await agent.invoke({
         // const result = await openai.chat.completions.create({
             // model: "deepseek-chat",
             messages: [
+              { role: "system", content: "You are a fact-checking assistant." },
               { role: "user", content: prompt },
             ],
         });

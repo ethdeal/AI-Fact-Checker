@@ -31,7 +31,7 @@ import { z } from 'zod';
 // community embeddings
 import { HuggingFaceTransformersEmbeddings } from "@langchain/community/embeddings/huggingface_transformers";
 // chromadb
-import { Chroma } from "@langchain/community/vectorstores/chroma"; 
+// import { Chroma } from "@langchain/community/vectorstores/chroma"; 
 
 
 dotenv.config();
@@ -39,21 +39,46 @@ dotenv.config();
 app.use(cors());
 app.use(express.json());
 
-// Embeddings ----------------------------------------------
-// still necessary for retrieval
+// const OpenAI = require("openai");
+
+// const openai = new OpenAI({
+//   baseURL: "https://api.deepseek.com/v1",
+//   apiKey: process.env.DEEPSEEK_API_KEY,
+// });
+
+// const groundingTool = {
+//     googleSearch: {}
+// }
+
+// Load data
+import data from './data.js';
+const fact1 = data[0];
+
+// Chunking ----------------------------------------------
+const docs = [new Document({ 
+  pageContent: fact1.article, 
+  metadata: { label: fact1.label } 
+})];
+
+const splitter = new RecursiveCharacterTextSplitter({
+    chunkSize: 200,
+    chunkOverlap: 50,
+});
+
+const chunks = await splitter.splitDocuments(docs)
+
+// console.log(chunks);
+
+// Embedding ----------------------------------------------
+
 const embeddings = new HuggingFaceTransformersEmbeddings({
     modelName: "Xenova/all-MiniLM-L6-v2",
   });
 
+// console.log(await embeddings.embedQuery("moon landing"));
 
 // adds 
-// const vectorStore = await MemoryVectorStore.fromDocuments(chunks, embeddings);
-
-// Connects to Chroma collection
-const vectorStore = new Chroma(embeddings, {
-  collectionName: "fact-checker",
-  url: "http://localhost:8000",   // optional; default
-});
+const vectorStore = await MemoryVectorStore.fromDocuments(chunks, embeddings);
 
 // test retrieval
 // const retrievedDocs = await vectorStore.similaritySearch("Did the Apollo 11 mission land on the moon?", 3);
@@ -89,7 +114,30 @@ const llm = new ChatOpenAI({
     },
   });
 
-const agent = createAgent({model: llm, tools: [retrieveTool]});
+const agent = createAgent({model: llm, tools: [retrieveTool], 
+  // system: `
+  // You are a fact-checking assistant.
+  // You MUST follow this protocol:
+
+  // 1. FIRST: Use the retrieval tool to look up factual information.
+
+  // 2. AFTER TOOL CALL (IF ANY): Use the returned text as factual ground truth.
+
+  // RULES:
+  // - NEVER mention retrieval, search, tools, or context.
+  // - NEVER mention that information came from a database.
+  // - NEVER reference "chunks" or "documents".
+  // - NEVER call retrieve more than once.
+  
+  // Final step:
+  // Return ONLY a JSON object:
+  // {
+  //   "verdict": "True" | "False" | "Mixed",
+  //   "confidence": number between 0 and 1,
+  //   "explanation": [array of short sentences],
+  //   "sources": [array of links or empty]
+  // }`
+});
 
 
 // test llm call ----------------------------------
@@ -124,6 +172,7 @@ app.post('/fact-check', async (req, res) => {
         Rules:
             - If context was found, silently use it as factual truth.
             - NEVER mention the retrieval, search, or context.
+            - If context is used in your answer, DO NOT mention it in the explanation. Simply state the fact.
             - If no context is provided, ignore it and answer using general knowledge and built in search.
             - Never output commentary, markdown, or natural language before/after the JSON.`;
         

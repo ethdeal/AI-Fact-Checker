@@ -7,19 +7,21 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "serve": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "old": "node indexcopy4.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@google/genai": "^1.9.0",
     "@langchain/classic": "^1.0.3",
-    "@langchain/community": "^1.0.4",
+    "@langchain/community": "^1.0.7",
     "@langchain/core": "^1.0.4",
     "@langchain/langgraph": "^1.0.1",
     "@langchain/openai": "^1.0.0",
     "@langchain/textsplitters": "^1.0.0",
     "@xenova/transformers": "^2.17.2",
+    "chromadb": "^3.1.6",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^5.1.0",
