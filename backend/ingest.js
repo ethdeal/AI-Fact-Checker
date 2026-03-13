@@ -12,24 +12,22 @@ import data from "./data.js";
 async function ingest() {
   console.log("Starting ingestion…");
 
-  const fact1 = data[0];
-
   // -----------------------------
   // 1. Create documents
   // -----------------------------
-  const docs = [
-    new Document({
-      pageContent: fact1.article,
-      metadata: { id: fact1.label }, // use unique ID
-    }),
-  ];
+  const docs = data.map((item) => {
+    return new Document({
+      pageContent: item.article,
+      metadata: { id: item.label, title: item.title }, // use unique ID
+    });
+  });
 
   // -----------------------------
   // 2. Chunk docs
   // -----------------------------
   const splitter = new RecursiveCharacterTextSplitter({
-    chunkSize: 200,
-    chunkOverlap: 50,
+    chunkSize: 400,
+    chunkOverlap: 100,
   });
 
   const chunks = await splitter.splitDocuments(docs);
@@ -44,12 +42,23 @@ async function ingest() {
   // -----------------------------
   // 4. Insert into Chroma once
   // -----------------------------
-  await Chroma.fromDocuments(chunks, embeddings, {
+  // await Chroma.fromDocuments(chunks, embeddings, {
+  //   collectionName: "fact-checker",
+  //   // url: "http://localhost:8000",
+  // });
+
+  
+  const vectorStore = new Chroma(embeddings, {
     collectionName: "fact-checker",
-    // url: "http://localhost:8000",
+    url: "http://localhost:8000",
   });
 
-  console.log("Ingestion complete!");
+  // Deletes existing docs with ids in current batch, essentially updating or adding all docs in data.
+  await vectorStore.delete({filter: {id: {$in: chunks.map(c => c.metadata.id)}}}); // deletes docs with ids in current batch
+
+  await vectorStore.addDocuments(chunks);
+
+  console.log(`Ingestion complete! Inserted ${chunks.length} chunks into Chroma.`);
   process.exit(0);
 }
 

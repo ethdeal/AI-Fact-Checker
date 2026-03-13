@@ -103,12 +103,23 @@ function Popup() {
         
         {notification && <div className="notification">{notification}</div>}
 
+        <div className="claim-container">
+          <label>CLAIM</label>
+          <div className='claim-box'>
+            {factCheckResult.claim || <span className="no-claim">No claim available</span>}
+            {/* {"this is a test claim"} */}
+          </div>
+        </div>
+
         <div className="accuracy-container">
           <div className="verdict-container">
             <label>VERDICT</label>
             <div className={`verdict-box ${factCheckResult.verdict ? `verdict-${factCheckResult.verdict.toLowerCase()}` : ''}`}>
               {factCheckResult.verdict}
             </div>
+            {/* <div className={'verdict-box verdict-true'}>
+              {"True"}
+            </div> */}
           </div>
           <div className="confidence-container">
             <label>CONFIDENCE</label>
@@ -124,6 +135,7 @@ function Popup() {
           <label>Explanation</label>
           <div className='explanation-box'>
             {factCheckResult.explanation || <span className="no-explanation">No explanation available</span>}
+            {/* {"test explanation "} */}
           </div>
         </div>
 

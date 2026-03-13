@@ -18,7 +18,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       chrome.runtime.sendMessage({
         action: "updateHighlightedText",
         text: message.text
-      });
+      }).catch(error); // literally just doesn't work
       } catch (e) {
         console.log('Popup closed, ignore');
       }
@@ -65,7 +65,7 @@ async function handleFactCheckRequest() {
 
       // const result = `${text}`;
 
-      // Show checking notification immediately
+      // Show checking notification immediately (do i need this?????????????????????????????????????????????????????????)
       const checkingMsg = `Checking: ${text.substring(0, 100)}...`;
       console.log("checking message");
       // note: replace with separate notification
@@ -102,6 +102,7 @@ async function handleFactCheckRequest() {
 
 async function callFactCheckAPI(text) {
   console.log("function ran")
+  const startTime = performance.now(); // timing ----------------------
   const response = await fetch('http://localhost:3001/fact-check', {
     method: 'POST',
     headers: {
@@ -109,6 +110,10 @@ async function callFactCheckAPI(text) {
     },
     body: JSON.stringify({ text })
   });
+  const endTime = performance.now(); // timing end -----------------
+  console.log(
+    `[FULL CHAIN] Button → Results: ${(endTime - startTime).toFixed(1)} ms`
+  );
 
   if (!response.ok) {
     throw new Error(`API request failed: ${response.status}`);

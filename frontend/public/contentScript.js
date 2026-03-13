@@ -6,16 +6,16 @@
 // )
 
 
-
 // Listen for selection changes
 document.addEventListener('mouseup', handleTextSelection);
 document.addEventListener('keyup', handleTextSelection);
 
 let lastSentText = ''; // To avoid sending the same text multiple times
 
+// updates highlighted text box
 function handleTextSelection() {
   const selectedText = window.getSelection().toString().trim();
-  if (selectedText !== lastSentText) {
+  if (selectedText !== lastSentText) { // unhighlight to stop spam
     lastSentText = selectedText;
     console.log("handling text selection") // logs on page
     // context invalidated error if old page

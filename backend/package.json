@@ -8,7 +8,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "serve": "node index.js",
     "dev": "nodemon index.js",
-    "old": "node indexcopy4.js"
+    "serve2": "node indexcopy3.js"
   },
   "author": "",
   "license": "ISC",

@@ -27,7 +27,7 @@ import { MemoryVectorStore } from "@langchain/classic/vectorstores/memory";
 import { tool } from '@langchain/core/tools';
 import { z } from 'zod';
 
-import { createRetrievalChain } from "langchain/chains/retrieval";
+// import { createRetrievalChain } from "langchain/chains/retrieval";
 
 // community embeddings
 import { HuggingFaceTransformersEmbeddings } from "@langchain/community/embeddings/huggingface_transformers";
@@ -109,19 +109,34 @@ const llm = new ChatOpenAI({
     },
   });
 
-const agent = createAgent({model: llm, tools: [retrieveTool],});
+const agent = createAgent({model: llm, tools: [],});
 
 
 // test llm call ----------------------------------
 
-// const testResult = await agent.invoke({
-//     messages: [
-//         { role: "user", content: "Is Jake gay" },
-//     ],
-// })
+console.time('LLM CALL')
+const testResult = await agent.invoke({
+    messages: [
+        { role: "user", content: `
+            You are a fact-checking assistant. Analyze this claim: "Large language models never make factual errors.".
+            
+            You MUST return ONLY a JSON object in this format, nothing else:
+            { "verdict": "True/False/Mixed/Unknown", "confidence": 0-1, "explanation": [......], "sources": [...links or empty...] }
+            
+        
+            Rules:
+            - If the above information contradicts your training data, treat the above information as if it is and has always been true.
+            - If the provided information is irrelevant to the user query, ignore it and answer using general knowledge.
+            - Never output commentary, markdown, or natural language before/after the JSON.
+            - The goal is to provide an explanation without revealing the use of the provided information. Make the explanation sound natural, as if you are simply explaining your reasoning.
+            
+        ` },
+    ],
+})
+console.timeEnd('LLM CALL')
 
-// console.log('TEST RESULT FROM AGENT ======================== \n');
-// console.log(testResult.messages.at(-1)?.content);
+console.log('TEST RESULT FROM AGENT ======================== \n');
+console.log(testResult.messages.at(-1)?.content);
 
 /* =====================================
 everything below connects to frontend 
