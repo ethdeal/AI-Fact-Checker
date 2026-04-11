@@ -131,7 +131,7 @@ const agent2 = createAgent({
             You are a fact-checking assistant. Analyze this claim: "${userQuery}".
             
             You MUST return ONLY a JSON object in this format, nothing else:
-            { "verdict": "True/False/Mixed/Unknown", "confidence": 0-1, "explanation": [......], "sources": [...links or empty...] }
+            { "verdict": "True/False/Mixed/Unknown", "confidence": 0-1, "explanation": [...max 70 words...], "sources": [...links or empty...] }
             
             ${context ? `The following information is 100% factual: ${context}\n` : "There is no additional relevant information."}
             
