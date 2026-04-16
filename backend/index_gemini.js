@@ -5,7 +5,7 @@ const app = express();
 const port = 3001;
 
 // langchain
-import { ChatOpenAI } from "@langchain/openai"; // for deepseek
+import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 import { createAgent } from "langchain";
 // import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 // import { Document } from "@langchain/core/documents";
@@ -94,12 +94,9 @@ async function getRelevantContext(query) {
   }
 
 // Initialize LLM (need for original)
-const llm = new ChatOpenAI({
-    modelName: "deepseek-chat",
-    apiKey: process.env.DEEPSEEK_API_KEY,
-    configuration: {
-      baseURL: "https://api.deepseek.com/v1",
-    },
+const llm = new ChatGoogleGenerativeAI({
+    model: "gemini-2.5-flash",
+    apiKey: process.env.GEMINI_API_KEY,
     temperature: 0,
   });
 
@@ -297,6 +294,7 @@ app.post('/fact-check', async (req, res) => {
         let parsed;
         try {
             // factCheck = result.choices[0].message.content; // changed for deepseek
+            console.log('result from agent: ', result);
             factCheck = result.messages.at(-1)?.content; // langchain
             console.log('factCheck =============\n', factCheck);
             parsed = parseFactCheckJson(factCheck);
